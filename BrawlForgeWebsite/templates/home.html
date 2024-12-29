@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to BrawlForge{% endblock %}
+
+{% block content %}
+    <div class="home-page">
+        <!-- Search Bar -->
+        <div class="search-bar-container">
+            <form method="GET" action="/search-commander" class="search-form">
+                <input type="text" id="search-input" name="q" placeholder="Search for a Commander" autocomplete="off">
+                <button type="submit">Search</button>
+            </form>
+            <ul id="search-suggestions" class="dropdown-menu"></ul>
+        </div>
+
+        <!-- Centered Image and Text -->
+        <div class="center-container">
+            <div class="mtga-logo-container">
+                <img src="https://assets.echomtg.com/magic/cards/cropped/10517.hq.jpg" class="mtga-logo">
+            </div>
+
+            <h1>Welcome to BrawlForge</h1>
+            <p>Explore Magic: The Gathering Arena's Historic Brawl commanders and more!</p>
+            <a href="/decks">Start Exploring</a>
+        </div>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('search-input');
+        const suggestions = document.getElementById('search-suggestions');
+
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.trim();
+            if (query.length < 2) {
+                suggestions.innerHTML = ''; // Clear suggestions if query is too short
+                return;
+            }
+
+            fetch(`/autocomplete?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestions.innerHTML = ''; // Clear previous suggestions
+
+                    data.forEach(commander => {
+                        const li = document.createElement('li');
+                        li.textContent = commander.name;
+                        li.onclick = () => {
+                            searchInput.value = commander.name; // Set search bar to selected commander
+                            suggestions.innerHTML = ''; // Clear suggestions
+                        };
+                        suggestions.appendChild(li);
+                    });
+                });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-bar-container')) {
+                suggestions.innerHTML = ''; // Close suggestions if clicked outside
+            }
+        });
+    </script>
+
+    <style>
+        .home-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .search-bar-container {
+            position: absolute;
+            top: 70px;
+            right: 20px;
+        }
+
+        .search-form {
+            display: inline-block;
+        }
+
+        #search-input {
+            padding: 10px;
+            font-size: 16px;
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .dropdown-menu {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            border: 1px solid #ccc;
+            position: absolute;
+            width: 300px;
+            z-index: 1000;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .dropdown-menu li {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .dropdown-menu li:hover {
+            background-color: #f0f0f0;
+        }
+
+        .center-container {
+            text-align: center;
+            margin-top: 50px; /* Move content closer to the top */
+        }
+
+        .mtga-logo-container {
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .mtga-logo {
+            max-width: 800px; /* Enlarged Image */
+            height: auto;
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #007bff;
+        }
+
+        p {
+            font-size: 1.2em;
+        }
+
+        a {
+            color: purple;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+{% endblock %}

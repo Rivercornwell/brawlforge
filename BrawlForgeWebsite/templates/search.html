@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Card Search - BrawlForge{% endblock %}
+
+{% block content %}
+    <h1>Card Search</h1>
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% elif cards %}
+        <h2>Search Results</h2>
+        <ul>
+            {% for card in cards %}
+                <li>
+                    <h3>{{ card.name }}</h3>
+                    <img src="{{ card.image_uris.normal }}" alt="{{ card.name }}" style="max-width: 200px;">
+                    <p><strong>Type:</strong> {{ card.type_line }}</p>
+                    <p><strong>Oracle Text:</strong> {{ card.oracle_text }}</p>
+                    {% if card.flavor_text %}
+                        <p><em>{{ card.flavor_text }}</em></p>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

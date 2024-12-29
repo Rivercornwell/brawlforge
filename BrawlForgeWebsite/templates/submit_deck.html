@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="submit-deck-container">
+        <h1>Submit Your Deck</h1>
+
+        <!-- Commander Search Input -->
+        <form method="POST">
+            <label for="commander">Select Commander:</label>
+            <input type="text" id="commander" name="commander" placeholder="Search for a commander" oninput="searchCommanders()">
+
+            <!-- Dynamically display commander search results -->
+            <ul id="commander-suggestions">
+                {% for commander in commanders %}
+                    <li onclick="selectCommander('{{ commander.name }}')" class="commander-item">{{ commander.name }}</li>
+                {% endfor %}
+            </ul>
+
+            <label for="decklist">Deck List:</label>
+            <textarea id="decklist" name="decklist" placeholder="Paste your deck list here"></textarea>
+
+            <button type="submit">Submit Deck</button>
+        </form>
+    </div>
+
+    <script>
+        function searchCommanders() {
+            const query = document.getElementById('commander').value;
+            if (query.length >= 3) {  // Trigger search after typing at least 3 characters
+                fetch(`/search-commander?q=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let suggestions = document.getElementById('commander-suggestions');
+                        suggestions.innerHTML = '';
+                        data.forEach(commander => {
+                            const li = document.createElement('li');
+                            li.textContent = commander.name;
+                            li.onclick = () => selectCommander(commander.name);
+                            suggestions.appendChild(li);
+                        });
+                    });
+            }
+        }
+
+        // Select a commander from the suggestions list
+        function selectCommander(commanderName) {
+            document.getElementById('commander').value = commanderName;
+            document.getElementById('commander-suggestions').innerHTML = '';  // Clear suggestions
+        }
+    </script>
+{% endblock %}

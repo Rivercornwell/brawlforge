@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}{{ commander.name }} - BrawlForge{% endblock %}
+
+{% block content %}
+    <div class="commander-details">
+        <!-- Commander Image at the Top -->
+        <div class="commander-header">
+            <!-- Corrected the commander image reference -->
+            <img src="{{ commander.image_uris.normal }}" alt="{{ commander.name }}" class="commander-img">
+            <h1>{{ commander.name }}</h1>
+            <p>Colors: {{ commander.colors | join(", ") }}</p>
+        </div>
+
+        <!-- Submitted Decks Section -->
+        <h2>Recommended Cards</h2>
+        {% if submitted_deck_cards %}
+            <!-- Display cards grouped by type -->
+            {% for card_type, cards in submitted_deck_cards.items() %}
+                <h3>{{ card_type }}</h3>
+                <div class="card-grid">
+                    {% for card in cards %}
+                        <div class="card">
+                            <img src="{{ card.image_uris.normal }}" alt="{{ card.name }}">
+                            <p>{{ card.name }}</p>
+                            <p>CMC: {{ card.mana_cost }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No cards have been submitted for this commander yet.</p>
+        {% endif %}
+    </div>
+{% endblock %}

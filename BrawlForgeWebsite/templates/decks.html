@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Decks{% endblock %}
+
+{% block content %}
+    <div class="filters">
+        <form action="/decks" method="GET">
+            <label for="color">Filter by Color:</label>
+            <select name="color" id="color">
+                <option value="all" {% if selected_color == "all" %}selected{% endif %}>All</option>
+                <option value="W" {% if selected_color == "W" %}selected{% endif %}>White</option>
+                <option value="U" {% if selected_color == "U" %}selected{% endif %}>Blue</option>
+                <option value="B" {% if selected_color == "B" %}selected{% endif %}>Black</option>
+                <option value="R" {% if selected_color == "R" %}selected{% endif %}>Red</option>
+                <option value="G" {% if selected_color == "G" %}selected{% endif %}>Green</option>
+                <option value="W-U" {% if selected_color == "W-U" %}selected{% endif %}>White-Blue</option>
+                <option value="W-B" {% if selected_color == "W-B" %}selected{% endif %}>White-Black</option>
+                <option value="W-R" {% if selected_color == "W-R" %}selected{% endif %}>White-Red</option>
+                <option value="W-G" {% if selected_color == "W-G" %}selected{% endif %}>White-Green</option>
+                <option value="U-B" {% if selected_color == "U-B" %}selected{% endif %}>Blue-Black</option>
+                <option value="U-R" {% if selected_color == "U-R" %}selected{% endif %}>Blue-Red</option>
+                <option value="U-G" {% if selected_color == "U-G" %}selected{% endif %}>Blue-Green</option>
+                <option value="B-R" {% if selected_color == "B-R" %}selected{% endif %}>Black-Red</option>
+                <option value="B-G" {% if selected_color == "B-G" %}selected{% endif %}>Black-Green</option>
+                <option value="R-G" {% if selected_color == "R-G" %}selected{% endif %}>Red-Green</option>
+                <option value="W-U-B" {% if selected_color == "W-U-B" %}selected{% endif %}>White-Blue-Black</option>
+                <option value="W-U-R" {% if selected_color == "W-U-R" %}selected{% endif %}>White-Blue-Red</option>
+                <option value="W-U-G" {% if selected_color == "W-U-G" %}selected{% endif %}>White-Blue-Green</option>
+                <option value="W-B-R" {% if selected_color == "W-B-R" %}selected{% endif %}>White-Black-Red</option>
+                <option value="W-B-G" {% if selected_color == "W-B-G" %}selected{% endif %}>White-Black-Green</option>
+                <option value="W-R-G" {% if selected_color == "W-R-G" %}selected{% endif %}>White-Red-Green</option>
+                <option value="U-B-R" {% if selected_color == "U-B-R" %}selected{% endif %}>Blue-Black-Red</option>
+                <option value="U-B-G" {% if selected_color == "U-B-G" %}selected{% endif %}>Blue-Black-Green</option>
+                <option value="U-R-G" {% if selected_color == "U-R-G" %}selected{% endif %}>Blue-Red-Green</option>
+                <option value="B-R-G" {% if selected_color == "B-R-G" %}selected{% endif %}>Black-Red-Green</option>
+                <option value="W-U-B-R" {% if selected_color == "W-U-B-R" %}selected{% endif %}>White-Blue-Black-Red</option>
+                <option value="W-U-B-G" {% if selected_color == "W-U-B-G" %}selected{% endif %}>White-Blue-Black-Green</option>
+                <option value="W-U-R-G" {% if selected_color == "W-U-R-G" %}selected{% endif %}>White-Blue-Red-Green</option>
+                <option value="W-B-R-G" {% if selected_color == "W-B-R-G" %}selected{% endif %}>White-Black-Red-Green</option>
+                <option value="U-B-R-G" {% if selected_color == "U-B-R-G" %}selected{% endif %}>Blue-Black-Red-Green</option>
+                <option value="W-U-B-R-G" {% if selected_color == "W-U-B-R-G" %}selected{% endif %}>All Five Colors</option>
+            </select>
+            <button type="submit">Filter</button>
+        </form>
+    </div>
+
+    <div class="commander-grid">
+        {% if commanders %}
+            {% for commander in commanders %}
+                <div class="commander-card">
+                    <img src="{{ commander.image }}" alt="{{ commander.name }}">
+                    <h3>{{ commander.name }}</h3>
+                    <p>Colors: {{ commander.colors }}</p>
+                    <a href="{{ url_for('commander_details', slug=commander.slug) }}">View Details</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No commanders found for this color filter.</p>
+        {% endif %}
+    </div>
+{% endblock %}
